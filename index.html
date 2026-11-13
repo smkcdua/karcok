@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kartu Siswa — Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="hero">
+      <span class="hero-badge">Sistem Informasi Siswa</span>
+      <h1>Scan Kartu<br/>Identitas Siswa</h1>
+      <p>Arahkan kamera ke QR code atau masukkan ID secara manual.</p>
+    </div>
+
+    <div class="cam-status">
+      <span class="dot"></span>
+      <span id="cam-label">Memuat kamera…</span>
+    </div>
+
+    <div id="scanner-wrap">
+      <div id="reader"></div>
+    </div>
+
+    <button id="cam-toggle" onclick="toggleScanner()">⏹ Hentikan Kamera</button>
+
+    <div class="divider">atau</div>
+
+    <form class="manual-form" onsubmit="goToCard(event)">
+      <input type="text" id="manual-id" placeholder="Masukkan Student ID…"
+             autocomplete="off" inputmode="numeric" />
+      <button class="btn" type="submit">Buka</button>
+    </form>
+  </main>
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="assets/js/scanner.js"></script>
+</body>
+</html>

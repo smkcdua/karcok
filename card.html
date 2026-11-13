@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kartu Siswa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <main class="container">
+
+    <div id="loading">
+      <div class="spinner"></div>
+      <span>Mengambil data siswa…</span>
+    </div>
+
+    <div id="error-view">
+      <div class="error-icon">🔍</div>
+      <h2 id="error-title">Data Tidak Ditemukan</h2>
+      <p id="error-msg">Pastikan student_id benar atau hubungi administrator.</p>
+      <a class="back-btn" href="index.html">← Kembali ke Scanner</a>
+    </div>
+
+    <div id="card-view">
+      <div class="top-bar">
+        <a href="index.html">← Scanner</a>
+      </div>
+
+      <div class="id-card">
+        <div class="id-card-header">
+          <div class="school-name">Kartu Identitas Siswa</div>
+          <p class="card-title">Data Profil Siswa</p>
+        </div>
+        <div class="id-card-body">
+          <div class="photo-row">
+            <img class="student-photo" id="photo" src="assets/default.svg" alt="Foto Siswa" />
+            <div class="student-meta">
+              <span class="student-class" id="kelas">—</span>
+              <h2 class="student-name" id="nama">—</h2>
+              <div class="nomor-induk">NIS: <span id="nomor-induk">—</span></div>
+            </div>
+          </div>
+
+          <div class="section-title">Kompetensi</div>
+          <div class="competency-list" id="competency-list"></div>
+
+          <div class="section-title">Catatan</div>
+          <div class="notes-box">
+            <div class="notes-text" id="catatan">—</div>
+          </div>
+
+          <div class="card-footer">
+            <span class="id-chip">ID: <span id="student-id-chip">—</span></span>
+            <button class="print-btn" onclick="window.print()">🖨 Cetak</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
