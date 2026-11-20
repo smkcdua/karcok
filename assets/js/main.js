@@ -3,7 +3,7 @@
  */
 
 // Ganti dengan URL deploy Apps Script kamu
-const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzJKrrpd3Kd6AgaG97Ecf3BqHlEShFMAT6E4gV1dW1S8BD3xhu_SrprcxEji1vDvUm9/exec';
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbw1PAom_CJh-UXofJ_pK5zDxwjffxl9Epqdmvym-MsJoxsGKnz6vhhwy3aBV2r-ScLDEQ/exec';
 
 const DEFAULT_PHOTO = 'assets/default.svg';
 
@@ -15,6 +15,50 @@ const KOMPETENSIS = [
 ];
 
 function el(id) { return document.getElementById(id); }
+
+// Nilai tampil 2 digit di belakang koma, format Indonesia (85,33).
+// Ingin angka bulat tanpa ",00"? Ubah minimumFractionDigits menjadi 0.
+const nf = new Intl.NumberFormat('id-ID', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+// ── Foto Google Drive ─────────────────────────────────────────────────────
+// Ambil FILE_ID dari berbagai format link Drive, lalu coba beberapa endpoint
+// gambar secara berurutan sebelum jatuh ke placeholder.
+function driveFileId(url) {
+  const m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/)
+         || url.match(/[?&]id=([\w-]+)/)
+         || url.match(/googleusercontent\.com\/d\/([\w-]+)/);
+  return m ? m[1] : null;
+}
+
+function photoCandidates(raw) {
+  const url = clean(raw);
+  if (!url) return [];
+  const isGoogle = /drive\.google\.com|googleusercontent\.com/.test(url);
+  const id = isGoogle ? driveFileId(url) : null;
+  if (!id) return [url]; // bukan link Drive → pakai apa adanya
+  return [
+    `https://drive.google.com/thumbnail?id=${id}&sz=w400`,
+    `https://lh3.googleusercontent.com/d/${id}=w400`,
+  ];
+}
+
+function loadPhoto(imgEl, raw) {
+  const queue = photoCandidates(raw);
+  imgEl.referrerPolicy = 'no-referrer'; // Drive sering menolak hotlink dengan referrer
+  const next = () => {
+    if (!queue.length) {
+      imgEl.onerror = null; // cegah loop jika placeholder ikut gagal
+      imgEl.src = DEFAULT_PHOTO;
+      return;
+    }
+    imgEl.src = queue.shift();
+  };
+  imgEl.onerror = next;
+  next();
+}
 
 /** Ubah nilai sel apa pun (angka/teks/null) menjadi string rapi. */
 function clean(v) {
@@ -62,7 +106,7 @@ function renderKompetensi(data) {
 
     const val = document.createElement('span');
     val.className   = 'comp-val';
-    val.textContent = valid ? num : '—';
+    val.textContent = valid ? nf.format(num) : '—';
 
     item.append(lbl, wrap, val);
     list.appendChild(item);
@@ -104,14 +148,8 @@ async function loadCard() {
 
     const d = json.data;
 
-    // Foto — pasang handler error SEBELUM mengubah src
-    const photo = el('photo');
-    const fotoUrl = clean(d.foto_url);
-    photo.onerror = () => {
-      photo.onerror = null; // cegah loop jika fallback ikut gagal
-      photo.src = DEFAULT_PHOTO;
-    };
-    photo.src = fotoUrl || DEFAULT_PHOTO;
+    // Foto (dengan fallback otomatis)
+    loadPhoto(el('photo'), d.foto_url);
 
     el('nama').textContent            = clean(d.nama)        || '—';
     el('kelas').textContent           = clean(d.kelas)       || '—';
