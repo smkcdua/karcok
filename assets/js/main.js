@@ -45,8 +45,9 @@ function photoCandidates(raw) {
   ];
 }
 
-function loadPhoto(imgEl, raw) {
-  const queue = photoCandidates(raw);
+function loadPhoto(imgEl, raw, dataUri) {
+  // Prioritas: data URI dari Apps Script → URL Drive langsung → placeholder
+  const queue = (dataUri ? [dataUri] : []).concat(photoCandidates(raw));
   imgEl.referrerPolicy = 'no-referrer'; // Drive sering menolak hotlink dengan referrer
   const next = () => {
     if (!queue.length) {
@@ -54,7 +55,9 @@ function loadPhoto(imgEl, raw) {
       imgEl.src = DEFAULT_PHOTO;
       return;
     }
-    imgEl.src = queue.shift();
+    const src = queue.shift();
+    console.info('Memuat foto dari:', src.slice(0, 60) + (src.length > 60 ? '…' : ''));
+    imgEl.src = src;
   };
   imgEl.onerror = next;
   next();
@@ -149,7 +152,7 @@ async function loadCard() {
     const d = json.data;
 
     // Foto (dengan fallback otomatis)
-    loadPhoto(el('photo'), d.foto_url);
+    loadPhoto(el('photo'), d.foto_url, d.foto_data);
 
     el('nama').textContent            = clean(d.nama)        || '—';
     el('kelas').textContent           = clean(d.kelas)       || '—';
