@@ -3,7 +3,7 @@
  */
 
 // Ganti dengan URL deploy Apps Script kamu
-const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzlTTNJiNJmYDKldyhw8E6K887h0pdH9gAVhiF4peuHwZnn1gqguVaPzbAMedamZZNB/exec';
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyOfXCqcMKxtRqscE46-65bSGCSa_WwXUZBwMa26ntcUJR4FxD6Cbn7KLM47INIZwzx/exec';
 
 const DEFAULT_PHOTO = 'assets/default.svg';
 
